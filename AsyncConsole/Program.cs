@@ -1,5 +1,7 @@
-﻿using System;
+﻿using AsyncConsole.Samples;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,13 +12,22 @@ namespace AsyncConsole
     {
         static void Main(string[] args)
         {
-            var loop1_20 = Worker.LoopAsync(1, 20);
-            var loop20_50 = Worker.LoopAsync(20, 50);
-            loop1_20.Wait();
-            Console.WriteLine("Loop 1...20: {0}", loop1_20.Result);
-            Console.WriteLine("Loop 20...50: {0}", loop20_50.Result);
-            loop20_50.Wait();
+            AsyncLoops();
             Console.Read();
         }
+
+        #region 3 async tasks
+        // 3 async tasks with progress
+        static void ProgressReport(string text)
+        {
+            Console.WriteLine(text);
+        }
+        private static void AsyncLoops()
+        {
+            var progress = new Progress<string>(ProgressReport);
+            Looper.Loop(progress);
+        }
+
+        #endregion
     }
 }
