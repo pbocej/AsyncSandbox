@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AsyncConsole
@@ -13,11 +14,11 @@ namespace AsyncConsole
         static void Main(string[] args)
         {
             AsyncLoops();
-            Console.Read();
+            Console.ReadKey();
         }
 
         #region 3 async tasks
-        // 3 async tasks with progress
+        // 3 async tasks with progress & cancel
         static void ProgressReport(string text)
         {
             Console.WriteLine(text);
@@ -25,7 +26,33 @@ namespace AsyncConsole
         private static void AsyncLoops()
         {
             var progress = new Progress<string>(ProgressReport);
-            Looper.Loop(progress);
+            var cts = new CancellationTokenSource();
+            
+            Console.WriteLine("Press \"X\" to cancel...");
+            
+            var loop1 = Looper.LoopAsync("Task 1", 0, 100, progress, cts.Token);
+            var loop2 = Looper.LoopAsync("Task 2", 200, 300, progress, cts.Token);
+            var loop3 = Looper.LoopAsync("Task 3", 400, 500, progress, cts.Token);
+            loop1.Wait();
+            loop2.Wait();
+            loop3.Wait();
+            
+            ConsoleKeyInfo keyinfo;
+            bool completed = false;
+            bool canceled = false;
+            do
+            {
+                keyinfo = Console.ReadKey();
+                if (keyinfo.Key == ConsoleKey.X)
+                    cts.Cancel();
+                completed = loop1.IsCompleted && loop2.IsCompleted && loop3.IsCompleted;
+                canceled = loop1.IsCanceled || loop2.IsCanceled || loop3.IsCanceled;
+            }
+            while (!(completed || canceled));
+
+            Console.WriteLine(loop1.Result);
+            Console.WriteLine(loop2.Result);
+            Console.WriteLine(loop3.Result);
         }
 
         #endregion
