@@ -34,7 +34,9 @@ namespace AsyncConsole
             var loop2 = Looper.LoopAsync("Task 2", 11, 20, 1, progress, cts.Token);
             var loop3 = Looper.LoopAsync("Task 3", 21, 30, 1, progress, cts.Token);
             loop1.Wait();
+            Thread.Sleep(300);
             loop2.Wait();
+            Thread.Sleep(300);
             loop3.Wait();
             
             ConsoleKeyInfo keyinfo;
