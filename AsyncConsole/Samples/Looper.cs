@@ -7,7 +7,7 @@ namespace AsyncConsole.Samples
 {
     public class Looper
     {
-        public static async Task<string> LoopAsync(string name, int from, int to, IProgress<string> progress, CancellationToken ct)
+        public static async Task<string> LoopAsync(string name, int from, int to, int waitSeconds, IProgress<string> progress, CancellationToken ct)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -18,14 +18,15 @@ namespace AsyncConsole.Samples
                 {
                     ret = await Task.Run(() => ret + i);
                     progress.Report(string.Format("{0}:\t{1}", name, i));
+                    Thread.Sleep(waitSeconds * 1000);
                 }
             }
             catch (OperationCanceledException ex)
             {
-                return string.Format("{0}: {1}:\t{2}\t {3}ms", ex.Message, name, ret, sw.ElapsedMilliseconds);
+                return string.Format("{0}: {1}:\t{2}\t {3}s", ex.Message, name, ret, sw.ElapsedMilliseconds / 1000f);
             }
             sw.Stop();
-            return string.Format("RESULT {0}:\t{1}\t {2}ms", name, ret, sw.ElapsedMilliseconds);
+            return string.Format("RESULT {0}:\t{1}\t {2}s", name, ret, sw.ElapsedMilliseconds / 1000f);
         }
     }
 }
