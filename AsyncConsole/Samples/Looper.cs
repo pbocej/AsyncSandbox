@@ -7,7 +7,7 @@ namespace AsyncConsole.Samples
 {
     public class Looper
     {
-        public static async Task<string> LoopAsync(string name, int from, int to, int waitSeconds, IProgress<string> progress, CancellationToken ct)
+        public static async Task<string> LoopAsync(string name, int from, int to, decimal waitSeconds, IProgress<string> progress, CancellationToken ct)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -18,7 +18,7 @@ namespace AsyncConsole.Samples
                 {
                     ret = await Task.Run(() => ret + i);
                     progress.Report(string.Format("{0}:\t{1}", name, i));
-                    Thread.Sleep(waitSeconds * 1000);
+                    Thread.Sleep(Convert.ToInt32(waitSeconds * 1000));
                 }
             }
             catch (OperationCanceledException ex)

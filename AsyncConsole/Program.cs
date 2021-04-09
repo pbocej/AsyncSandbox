@@ -30,9 +30,9 @@ namespace AsyncConsole
             
             Console.WriteLine("Press \"X\" to cancel...");
             
-            var loop1 = Looper.LoopAsync("Task 1", 1, 10, 1, progress, cts.Token);
-            var loop2 = Looper.LoopAsync("Task 2", 11, 20, 1, progress, cts.Token);
-            var loop3 = Looper.LoopAsync("Task 3", 21, 30, 1, progress, cts.Token);
+            var loop1 = Looper.LoopAsync("Task 1", 1, 10, 0.3M, progress, cts.Token);
+            var loop2 = Looper.LoopAsync("Task 2", 11, 20, 0.3M, progress, cts.Token);
+            var loop3 = Looper.LoopAsync("Task 3", 21, 30, 0.3M, progress, cts.Token);
             loop1.Wait();
             Thread.Sleep(300);
             loop2.Wait();
