@@ -9,6 +9,7 @@ namespace AsyncConsole.Samples
     {
         public static async Task<string> LoopAsync(string name, int from, int to, decimal waitSeconds, IProgress<string> progress, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
             var sw = new Stopwatch();
             sw.Start();
             int ret = 0;
@@ -21,7 +22,7 @@ namespace AsyncConsole.Samples
                     Thread.Sleep(Convert.ToInt32(waitSeconds * 1000));
                 }
             }
-            catch (OperationCanceledException ex)
+            catch (TaskCanceledException ex)
             {
                 return string.Format("{0}: {1}:\t{2}\t {3}s", ex.Message, name, ret, sw.ElapsedMilliseconds / 1000f);
             }
